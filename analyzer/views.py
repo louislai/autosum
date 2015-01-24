@@ -1,15 +1,16 @@
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from analyzer.forms import SummarizerForm
 
 def index(request):
-    form  = SummarizerForm(auto_id=False)
     if request.method=='POST':
-        form = SummarizerForm(request.POST)
-        if form.is_valid():
-          cd = form.cleaned_data
-          url = cd.get('article_url')
-          return HttpResponseRedirect('/')
+        form = request.POST
+        url = form.get('article_url')
+        return HttpResponseRedirect('/index')
 
-    return render(request, 'index.html', {'form': form})
-# Create your views here.
+    return render(request, 'index.html')
+
+def compare(request):
+  return render(request, 'compare.html')
+
+def cluster(request):
+  return render(request, 'cluster.html')

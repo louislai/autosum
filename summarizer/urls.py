@@ -6,6 +6,9 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'summarizer.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    url(r'^cluster', views.cluster),
+    url(r'^compare', views.compare),
     url(r'^$', views.index),
+    url(r'^index', views.index),
     url(r'^admin/', include(admin.site.urls)),
 )

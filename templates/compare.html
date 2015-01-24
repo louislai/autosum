@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content_block %}
+  <form id="article_compare" method="post" action="compare">
+    <div class="row">
+      <div class="large-6 columns">
+      
+          <input type="text" placeholder="Article 1" />
+        
+      </div>
+      <div class="large-6 columns">
+        
+          <input type="text" placeholder="Article 2" />
+        
+      </div>
+    </div>
+    <div class="large-3 columns large-centered">
+      <button type="submit" class="button">Compare Articles</button>
+    </div>
+  </form>
+{% endblock %}
