@@ -91,7 +91,7 @@ $(document).ready(function() {
 
 });
 
-var test_url = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+var test_url = /((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#& ]+\.([a-zA-Z0-9\.\/\?\:@\-_=#& ])*/;
 
 // This function gets cookie with a given name
 function getCookie(name) {

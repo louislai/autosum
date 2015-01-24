@@ -29,6 +29,6 @@ def summarize(request):
     list = ""
     list += "<div class='alert-box secondary' style='margin-bottom: 0'><h5>" + sentences[0] + "</h5></div><table style='margin-top: 0'><tbody>"
     for i in range(1, len(sentences)):
-      list += "<tr><td width='100%'>" + sentences[i] + "</td></tr>"
+      list += "<tr><td width='1200px'>" + sentences[i] + "</td></tr>"
     list += "</tbody></table>"
     return HttpResponse(list)
