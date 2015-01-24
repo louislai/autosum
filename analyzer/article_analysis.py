@@ -2,11 +2,21 @@ from sets import Set
 from goose import Goose
 import operator
 
+
+
 def read_stop_words_file():
-	f = open('stop_words.txt')
-	file_content = f.read().replace(' ', '')
+	# f = open('stop_words.txt')
+	stop_words= "a, able, about, above, according, accordingly, across, actually, after, afterwards, again, against, all, allow, allows, almost, alone, along, already, also, although, always, am, among, amongst, an, and, another, any, anybody, anyhow, anyone, anything, anyway, anyways, anywhere, apart, appear, appreciate, appropriate, are, around, as, aside, ask, asking, associated, at, available, away, awfully, be, became, because, become, becomes, becoming, been, before, beforehand, behind, being, believe, below, beside, besides, best, better, between, beyond, both, brief, but, by, came, can, cannot, cant, cause, causes, certain, certainly, changes, clearly, co, com, come, comes, concerning, consequently, consider, considering, contain, containing, contains, corresponding, could, course, currently, definitely, described, despite, did, different, do, does, doing, done, down, downwards, during, each, edu, eg, eight, either, else, elsewhere, enough, entirely, especially, et, etc, even, ever, every, everybody, everyone, everything, everywhere, ex, exactly, example, except, far, few, fifth, first, five, followed, following, follows, for, former, formerly, forth, four, from, further, furthermore, get, gets, getting, given, gives, go, goes, going, gone, got, gotten, greetings, had, happens, hardly, has, have, having, he, hello, help, hence, her, here, hereafter, hereby, herein, hereupon, hers, herself, hi, him, himself, his, hither, hopefully, how, howbeit, however, ie, if, ignored, immediate, in, inasmuch, inc, indeed, indicate, indicated, indicates, inner, insofar, instead, into, inward, is, it, its, itself, just, keep, keeps, kept, know, knows, known, last, lately, later, latter, latterly, least, less, lest, let, like, liked, likely, little, look, looking, looks, ltd, mainly, many, may, maybe, me, mean, meanwhile, merely, might, more, moreover, most, mostly, much, must, my, myself, name, namely, nd, near, nearly, necessary, need, needs, neither, never, nevertheless, new, next, nine, no, nobody, non, none, noone, nor, normally, not, nothing, novel, now, nowhere, obviously, of, off, often, oh, ok, okay, old, on, once, one, ones, only, onto, or, other, others, otherwise, ought, our, ours, ourselves, out, outside, over, overall, own, particular, particularly, per, perhaps, placed, please, plus, possible, presumably, probably, provides, que, quite, qv, rather, rd, re, really, reasonably, regarding, regardless, regards, relatively, respectively, right, said, same, saw, say, saying, says, second, secondly, see, seeing, seem, seemed, seeming, seems, seen, self, selves, sensible, sent, serious, seriously, seven, several, shall, she, should, since, six, so, some, somebody, somehow, someone, something, sometime, sometimes, somewhat, somewhere, soon, sorry, specified, specify, specifying, still, sub, such, sup, sure, take, taken, tell, tends, th, than, thank, thanks, thanx, that, thats, the, their, theirs, them, themselves, then, thence, there, thereafter, thereby, therefore, therein, theres, thereupon, these, they, think, third, this, thorough, thoroughly, those, though, three, through, throughout, thru, thus, to, together, too, took, toward, towards, tried, tries, truly, try, trying, twice, two, un, under, unfortunately, unless, unlikely, until, unto, up, upon, us, use, used, useful, uses, using, usually, value, various, very, via, viz, vs, want, wants, was, way, we, welcome, well, went, were, what, whatever, when, whence, whenever, where, whereafter, whereas, whereby, wherein, whereupon, wherever, whether, which, while, whither, who, whoever, whole, whom, whose, why, will, willing, wish, with, within, without, wonder, would, would, yes, yet, you, your, yours, yourself, yourselves, zero"
+
+	file_content = stop_words.replace(' ', '')
 	stop_words = file_content.strip().split(',')
 	return Set(stop_words)
+
+def read_conclusion_transition_word_file():
+	f = open('conclusion_transition_word.txt')
+	file_content = f.read()
+	transition_word_list = file_content.split(',')
+	return transition_word_list
 
 def get_article_from_url(article_url):
 	# Official code
@@ -92,6 +102,48 @@ def get_topic_potential_words(sentence_list, stop_word_set):
 
 	return (topic_potential_word_list, prob_dict)
 
+def check_if_a_sentence_qualified_for_summary(topic_potential_word_set, prob_dict, sentence, qualified_ratio):
+	word_list = sentence.split(' ')
+	topic_potential_word_num = 0
+	total_prob = 0
+	
+	for word in word_list:
+		word = word.lower().replace(',', '').replace('(', '').replace(')', '')
+		if word in topic_potential_word_set:
+			topic_potential_word_num = topic_potential_word_num + 1
+			total_prob = total_prob + prob_dict[word]
+	topic_potential_word_ratio = topic_potential_word_num * 1.0 / len(word_list)
+	average_prob_in_title = total_prob * 1.0 / topic_potential_word_num
+
+	if (topic_potential_word_ratio < qualified_ratio):
+		return False
+
+	average_prob_in_article = 1.0 / len(topic_potential_word_set)
+	if (average_prob_in_title <= average_prob_in_article):
+		return False
+
+	return True
+
+def check_if_title_qualified_for_summary(topic_potential_word_set, prob_dict, title):
+	check_if_a_sentence_qualified_for_summary(topic_potential_word_set, prob_dict, title, 0.33)
+
+def check_if_sentence_contains_conclusion_transition_word(sentence):
+	transition_word_list = read_conclusion_transition_word_file()
+	for word in transition_word_list:
+		if sentence.lower().find(word) >= 0:
+			return True
+
+	return False
+
+def get_topic_potential_sentences(topic_potential_word_set, prob_dict, sentence_list):
+	'''
+	get a list of sentences which contains conclusion_transition_word
+	'''
+	important_sentence_list = []
+	for sentence in sentence_list:
+		if check_if_sentence_contains_conclusion_transition_word(sentence):
+			important_sentence_list.append(sentence)
+
 def pick_summary_sentences(sentence_list, stop_word_set):
 	sentence_weight_dict = {}
 	topic_potential_word_list, prob_dict = get_topic_potential_words(sentence_list, stop_word_set)
@@ -111,35 +163,19 @@ def pick_summary_sentences(sentence_list, stop_word_set):
 
 	is_title_qualified = check_if_title_qualified_for_summary(topic_potential_word_set, prob_dict, sentence_list[0])
 
+
 	return chosen_sentences
+	# return get_topic_potential_sentences(topic_potential_word_set, prob_dict, sentence_list)
 
-def check_if_title_qualified_for_summary(topic_potential_word_set, prob_dict, title):
-	word_list = title.split(' ')
-	topic_potential_word_num = 0
-	total_prob = 0
-	
-	for word in word_list:
-		word = word.lower().replace(',', '').replace('(', '').replace(')', '')
-		if word in topic_potential_word_set:
-			topic_potential_word_num = topic_potential_word_num + 1
-			total_prob = total_prob + prob_dict[word]
-	topic_potential_word_ratio = topic_potential_word_num * 1.0 / len(word_list)
-	average_prob_in_title = total_prob * 1.0 / topic_potential_word_num
-
-	if (topic_potential_word_ratio < 0.33):
-		return False
-
-	average_prob_in_article = 1.0 / len(topic_potential_word_set)
-	if (average_prob_in_title <= average_prob_in_article):
-		return False
-
-	return True
-
-if __name__ == '__main__':
-	article_url = 'http://www.businessinsider.com/the-oil-crash-is-making-the-strong-stronger-2015-1'
+def get_summary(article_url):
 	sentence_list = split_article_into_setences(article_url)
 	stop_word_set = read_stop_words_file()
-	print pick_summary_sentences(sentence_list, stop_word_set)
+	return pick_summary_sentences(sentence_list, stop_word_set)
 
-
+if __name__ == '__main__':
+	article_url = 'http://www.straitstimes.com/news/sport/tennis/story/tennis-sister-act-spurs-serena-williams-open-last-16-20150124'
+	sentence_list = split_article_into_setences(article_url)
+	stop_word_set = read_stop_words_file()
+	# print pick_summary_sentences(sentence_list, stop_word_set)
+	print get_summary(article_url)
 

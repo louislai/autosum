@@ -25,7 +25,7 @@ def summarize(request):
   if request.method=='POST':
     form = request.POST
     url = form.get('article_url')
-    sentences = split_article_into_setences(url)
+    sentences = get_summary(url)
     list = ""
     list += "<li><h3>" + sentences[0] + "</h3></li>"
     for i in range(1, len(sentences)):
