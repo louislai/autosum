@@ -24,27 +24,54 @@ $(document).ready(function() {
 
   $('#article_summarize_submit').click(function() {
     var input = $('#article_summarize_url').val();
-    $.post('/summarize', {article_url: input}, function(data) {
-      var result = "<p><h2>Summary</h2></p><ul><li><h3>" + data + "</h3></li><li>Yeah</li></ul>";
-      $('#article_summarize_result p').html(result);
-    });
+    if (!test_url.test(input)) {
+      $('#summary_error').fadeIn();
+    } else {
+      $('#summary_error').fadeOut();
+      $.post('/summarize', {article_url: input}, function(data) {
+        var result = "<p><h2>Summary</h2></p><ul><li><h3>" + data + "</h3></li><li>Yeah</li></ul>";
+        $('#article_summarize_result p').html(result);
+      });
+    }
   });
 
   $('#article_compare_submit').click(function() {
     var article_url_1 = $('#article_url_1').val();
     var article_url_2 = $('#article_url_2').val();
-    $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
-      var result = data;
-      $('#article_compare_result p').html(result);
-    })
+    if (!test_url.test(article_url_1)) {
+      $('#compare_error_1').fadeIn();
+    } else {
+      $('#compare_error_1').fadeOut();
+    }
+    if (!test_url.test(article_url_2)) {
+      $('#compare_error_2').fadeIn();
+    } else {
+      $('#compare_error_2').fadeOut();
+    }
+    if (test_url.test(article_url_1) && test_url.test(article_url_2)) {
+      $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
+        var result = data;
+        $('#article_compare_result p').html(result);
+      })
+    }
   })
 
   $('#article_cluster_submit').click(function() {
     var urls = $('#article_cluster_urls').val();
-    $.post('/cluster', {article_urls: urls}, function(data) {
-      var result = data;
-      $('#article_cluster_result p').html(result);
-    })
+    var array = urls.split(';');
+    var valid = true;
+    for(var i = 0; i < array.length; i++) {
+      valid = test_url.test(array[i].trim());
+    }
+    if (valid) {
+      $('#cluster_error').fadeOut();
+      $.post('/cluster', {article_urls: urls}, function(data) {
+        var result = data;
+        $('#article_cluster_result p').html(result);
+      })
+    } else {
+      $('#cluster_error').fadeIn();
+    }
   })
 
   $("#spinner").bind("ajaxSend", function() {
@@ -56,7 +83,7 @@ $(document).ready(function() {
     })
 });
 
-
+var test_url = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 
 // This function gets cookie with a given name
 function getCookie(name) {

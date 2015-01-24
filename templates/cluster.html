@@ -4,9 +4,12 @@
 <form>
   <div class="row">
     <div class="large-12 columns">
-      <textarea id="article_cluster_urls" rows="8" placeholder="Enter multiple article urls delimited by semicolons"></textarea>
+      <textarea style="margin-bottom: 0;" id="article_cluster_urls" rows="8" placeholder="Enter multiple article urls delimited by semicolons"></textarea>
     </div>
+
   </div>
+  <small id="cluster_error" style="margin-top: 0; display:none;" class="error">Valid urls are required</small>
+  <br>
   <div class="large-3 columns large-centered">
     <div id="article_cluster_submit" class="button">Cluster Articles</div>
   </div>
