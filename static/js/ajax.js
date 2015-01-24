@@ -28,12 +28,14 @@ $(document).ready(function() {
       $('#summary_error').fadeIn();
     } else {
        $("#spinner").fadeIn();
+       $('#article_summarize_result').fadeOut();
        $('#article_summarize_result p').html('');
        $('#summary_error').fadeOut();
        $.post('/summarize', {article_url: input}, function(data) {
          $("#spinner").fadeOut();
          var result = "<p><h2>Summary</h2></p><ul>" + data + "</ul>";
          $('#article_summarize_result p').html(result);
+         $('#article_summarize_result').fadeIn();
        });
     }
   });
@@ -52,17 +54,27 @@ $(document).ready(function() {
       $('#compare_error_2').fadeOut();
     }
     if (test_url.test(article_url_1) && test_url.test(article_url_2)) {
-      $("#spinner").fadeIn();
-      // $('#article_compare_result p').html('');
+      $("#spinner").hide();
+      $('#article_compare_result').hide();
       $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
         $("#spinner").fadeOut();
-        var result = data;
-        jQuery({ Counter: 0 }).animate({ Counter: 80 }, {
+        $('#article_compare_result').find('ul').empty();
+        var result = data.split(',');
+        var index = result[0];
+        
+        $('#similarity').html(index);
+        $('#article_compare_result').fadeIn();
+        for(var i=1; i<result.length; i++) {
+          var li = '<li>' + result[i] + '</li>';
+          $('#similar_items').append(li);
+        }
+        jQuery({ Counter: 0 }).animate({ Counter: index }, {
           duration: 1000,
           step: function () {
             $('#similarity').html(Math.ceil(this.Counter));
           }
         });
+
         // $('#article_compare_result p').html(result);
       })
     }
@@ -76,7 +88,7 @@ $(document).ready(function() {
       valid = test_url.test(array[i].trim());
     }
     if (valid) {
-      $("#spinner").fadeIn();
+      $("#spinner").hide();
       $('#cluster_error').fadeOut();
       $('#article_cluster_result p').html('');
       $.post('/cluster', {article_urls: urls}, function(data) {

@@ -20,9 +20,27 @@
       <div id="article_compare_submit" class="button">Compare Articles</div>
     </div>
   </form>
-  <div id="article_compare_result" class="large-6 columns large-centered text-center">
-    <h3>
-      Similarity Index: <span id="similarity"></span>
-    </h3>
+  <div id="article_compare_result" class="row" hidden>
+    <table class="large-8 large-offset-2 columns" >
+      <thead>
+        <tr>
+          <th class="text-center"><h4>Similar Keywords </h4></th>
+          <th class="text-center"><h4>Similarity Index</h4></th>
+        </tr>
+      </thead>
+      <tbody id = "article_compare_tbl">
+          <tr>
+            <td>
+              <ul id="similar_items">
+              <ul>
+            </td>
+            <td class="text-center">
+              <h1>
+                <span id="similarity"></span> %
+              </h1>
+            </td>
+          </tr>
+      </tbody>
+    </table>    
   </div>
 {% endblock %}
