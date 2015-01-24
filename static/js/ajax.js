@@ -53,10 +53,17 @@ $(document).ready(function() {
     }
     if (test_url.test(article_url_1) && test_url.test(article_url_2)) {
       $("#spinner").fadeIn();
+      // $('#article_compare_result p').html('');
       $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
         $("#spinner").fadeOut();
         var result = data;
-        $('#article_compare_result p').html(result);
+        jQuery({ Counter: 0 }).animate({ Counter: 80 }, {
+          duration: 1000,
+          step: function () {
+            $('#similarity').html(Math.ceil(this.Counter));
+          }
+        });
+        // $('#article_compare_result p').html(result);
       })
     }
   })
