@@ -27,9 +27,12 @@ $(document).ready(function() {
     if (!test_url.test(input)) {
       $('#summary_error').fadeIn();
     } else {
+      $("#spinner").fadeIn();
+      $('#article_summarize_result p').html('');
       $('#summary_error').fadeOut();
       $.post('/summarize', {article_url: input}, function(data) {
-        var result = "<p><h2>Summary</h2></p><ul><li><h3>" + data + "</h3></li><li>Yeah</li></ul>";
+        $("#spinner").fadeOut();
+        var result = "<p><h2>Summary</h2></p><ul>" + data + "</ul>";
         $('#article_summarize_result p').html(result);
       });
     }
@@ -49,7 +52,9 @@ $(document).ready(function() {
       $('#compare_error_2').fadeOut();
     }
     if (test_url.test(article_url_1) && test_url.test(article_url_2)) {
+      $("#spinner").fadeIn();
       $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
+        $("#spinner").fadeOut();
         var result = data;
         $('#article_compare_result p').html(result);
       })
@@ -64,8 +69,11 @@ $(document).ready(function() {
       valid = test_url.test(array[i].trim());
     }
     if (valid) {
+      $("#spinner").fadeIn();
       $('#cluster_error').fadeOut();
+      $('#article_cluster_result p').html('');
       $.post('/cluster', {article_urls: urls}, function(data) {
+        $("#spinner").fadeOut();
         var result = data;
         $('#article_cluster_result p').html(result);
       })
@@ -74,13 +82,6 @@ $(document).ready(function() {
     }
   })
 
-  $("#spinner").bind("ajaxSend", function() {
-        $(this).show();
-    }).bind("ajaxStop", function() {
-        $(this).delay(5000).hide('slow');
-    }).bind("ajaxError", function() {
-        $(this).hide();
-    })
 });
 
 var test_url = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
