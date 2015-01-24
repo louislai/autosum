@@ -1,8 +1,3 @@
 /* Fix Foundation Textarea */
 textarea { height: auto; }
 
-#binaryTree {
-  overflow: auto;
-  width: 100%;
-  height: 200px;
-}
