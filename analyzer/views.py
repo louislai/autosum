@@ -4,7 +4,17 @@ from django.shortcuts import render
 from article_analysis import *
 
 def index(request):
-  return render(request, 'index.html')
+  if request.method=='POST':
+    form = request.POST
+    url = form.get('article_url')
+    sentences = get_summary(url)
+    list = ""
+    list += "<li><h3>" + sentences[0] + "</h3></li>"
+    for i in range(1, len(sentences)):
+      list += "<li>" + sentences[i] + "</li>"
+    return HttpResponse(list)
+  else:
+    return render(request, 'index.html')
 
 def compare(request):
   if request.method=='POST':
@@ -27,7 +37,8 @@ def summarize(request):
     url = form.get('article_url')
     sentences = get_summary(url)
     list = ""
-    list += "<li><h3>" + sentences[0] + "</h3></li>"
+    list += "<div class='alert-box secondary' style='margin-bottom: 0'><h5>" + sentences[0] + "</h5></div><table style='margin-top: 0'><tbody>"
     for i in range(1, len(sentences)):
-      list += "<li>" + sentences[i] + "</li>"
+      list += "<tr><td width='100%'>" + sentences[i] + "</td></tr>"
+    list += "</tbody></table>"
     return HttpResponse(list)

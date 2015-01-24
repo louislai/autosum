@@ -23,18 +23,18 @@ $(document).ready(function() {
   })
 
   $('#article_summarize_submit').click(function() {
-    var input = $('#article_summarize_url').val();
+      var input = $('#article_summarize_url').val();
     if (!test_url.test(input)) {
       $('#summary_error').fadeIn();
     } else {
-      $("#spinner").fadeIn();
-      $('#article_summarize_result p').html('');
-      $('#summary_error').fadeOut();
-      $.post('/summarize', {article_url: input}, function(data) {
-        $("#spinner").fadeOut();
-        var result = "<p><h2>Summary</h2></p><ul>" + data + "</ul>";
-        $('#article_summarize_result p').html(result);
-      });
+       $("#spinner").fadeIn();
+       $('#article_summarize_result p').html('');
+       $('#summary_error').fadeOut();
+       $.post('/summarize', {article_url: input}, function(data) {
+         $("#spinner").fadeOut();
+         var result = "<p><h2>Summary</h2></p><ul>" + data + "</ul>";
+         $('#article_summarize_result p').html(result);
+       });
     }
   });
 
