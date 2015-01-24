@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content_block %}
-  <form id="article_summarize" method="post" action="index">
+  <form>
 
     {% csrf_token %}
     <div class="row">
       <div class="row collapse">
         <div class="small-10 columns">
-          <input type="text" placeholder="Article Url">
+          <input id="article_summarize_url" type="text" placeholder="Article Url">
         </div>
         <div class="small-2 columns">
-          <button type="submit" class="button postfix">Get Summary</button>
+          <div id="article_summarize_submit" class="button postfix">Get Summary</div>
         </div>
       </div>
     </div>
   </div>
   </form>
+  <div id="article_summarize_result">
+    <p></p>
+  </div>
 {% endblock %}

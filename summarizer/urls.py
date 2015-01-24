@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^cluster', views.cluster),
     url(r'^compare', views.compare),
     url(r'^$', views.index),
+    url(r'^summarize$', views.summarize),
     url(r'^index', views.index),
     url(r'^admin/', include(admin.site.urls)),
 )
