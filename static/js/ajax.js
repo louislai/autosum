@@ -1,9 +1,31 @@
 
 $(document).ready(function() {
+
+  $('#article_summarize_url').keydown(function (e){
+    if(e.keyCode == 13){
+      e.preventDefault();
+      $('#article_summarize_submit').click();
+    }
+  })
+
+  $('#article_url_2').keydown(function (e){
+    if(e.keyCode == 13){
+      e.preventDefault();
+      $('#article_compare_submit').click();
+    }
+  })
+
+  $('#article_cluster_urls').keydown(function (e){
+    if(e.keyCode == 13){
+      e.preventDefault();
+      $('#article_cluster_submit').click();
+    }
+  })
+
   $('#article_summarize_submit').click(function() {
     var input = $('#article_summarize_url').val();
     $.post('/summarize', {article_url: input}, function(data) {
-      var result = data;
+      var result = "<p><h2>Summary</h2></p><ul><li><h3>" + data + "</h3></li><li>Yeah</li></ul>";
       $('#article_summarize_result p').html(result);
     });
   });
@@ -24,7 +46,17 @@ $(document).ready(function() {
       $('#article_cluster_result p').html(result);
     })
   })
+
+  $("#spinner").bind("ajaxSend", function() {
+        $(this).show();
+    }).bind("ajaxStop", function() {
+        $(this).delay(5000).hide('slow');
+    }).bind("ajaxError", function() {
+        $(this).hide();
+    })
 });
+
+
 
 // This function gets cookie with a given name
 function getCookie(name) {
