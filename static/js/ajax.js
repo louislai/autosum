@@ -58,15 +58,20 @@ $(document).ready(function() {
       $('#article_compare_result').hide();
       $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
         $("#spinner").fadeOut();
-        $('#article_compare_result').find('ul').empty();
+        var ul = $('#article_compare_result').find('ul');
+        ul.empty();
         var result = data.split(',');
         var index = result[0];
         
         $('#similarity').html(index);
         $('#article_compare_result').fadeIn();
-        for(var i=1; i<result.length; i++) {
-          var li = '<li>' + result[i] + '</li>';
-          $('#similar_items').append(li);
+        if (result.length == 1 || result[1] == '') {
+          ul.html("NIL");
+        } else {
+          for(var i=1; i<result.length; i++) {
+            var li = '<li>' + result[i] + '</li>';
+            $('#similar_items').append(li);
+          }
         }
         jQuery({ Counter: 0 }).animate({ Counter: index }, {
           duration: 1000,

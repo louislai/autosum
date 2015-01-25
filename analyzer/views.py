@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import render
 from article_analysis import *
-from articles_comparision import *
+from articles_comparison import *
 
 def index(request):
   return render(request, 'index.html')
