@@ -1,6 +1,7 @@
 import articles_comparison
 import article_analysis
 import operator
+import random
 from sets import Set
 
 from PIL import Image,ImageDraw
@@ -349,9 +350,10 @@ def cluster_articles(url_list):
 				common_freq_list[idx].append(0)
 
 	clust = hcluster(common_freq_list)
-	drawdendrogram(clust,article_name_list,jpeg="static/clust.jpg")
+	filename = "static/clust" + random.random() + ".jpg"
+	drawdendrogram(clust,article_name_list,jpeg=filename)
 
-	return 'clust.jpg'
+	return filename
 
 if __name__ == '__main__':
 	url_list = []

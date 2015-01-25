@@ -4,6 +4,7 @@ from django.shortcuts import render
 from article_analysis import *
 from articles_comparison import *
 from analyzer.articles_clustering import *
+import random
 
 def index(request):
   return render(request, 'index.html')
@@ -23,9 +24,8 @@ def cluster(request):
     form = request.POST
     urls = form.get('article_urls')
     url_list = [x.strip() for x in urls.split(';')]
-    # jpeg = cluster_articles(url_list)
     jpeg = cluster_articles(url_list)
-    return HttpResponse("<img class='cluster_img' src='static/clust.jpg' width='1200px' height='800px' />")
+    return HttpResponse("<img class='cluster_img' src='" jpeg + "' width='1200px' height='800px' />")
   return render(request, 'cluster.html')
 
 def summarize(request):
