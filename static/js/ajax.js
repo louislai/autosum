@@ -93,12 +93,14 @@ $(document).ready(function() {
       valid = test_url.test(array[i].trim());
     }
     if (valid) {
+      $('#showCluster').fadeOut();
       $("#spinner").fadeIn();
       $('#imgcontainer').html('');
       $('#cluster_error').fadeOut();
       $('#article_cluster_result p').html('');
       $.post('/cluster', {article_urls: urls}, function(data) {
         $("#spinner").fadeOut();
+        $('#showCluster').fadeIn();
         var result = data;
         $('#imgcontainer').html(result);
       })

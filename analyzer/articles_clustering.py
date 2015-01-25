@@ -141,7 +141,9 @@ def drawdendrogram(clust,labels,jpeg='clusters.jpg'):
 
   # Draw the first node
   drawnode(draw,clust,10,(h/2),scaling,labels)
+  img = img.resize((1000, 100), Image.ANTIALIAS)
   img.save(jpeg,'JPEG')
+  return jpeg
 
 def drawnode(draw,clust,x,y,scaling,labels):
   if clust.id<0:
@@ -349,9 +351,9 @@ def cluster_articles(url_list):
 				common_freq_list[idx].append(0)
 
 	clust = hcluster(common_freq_list)
-	drawdendrogram(clust,article_name_list,jpeg="static/clust.jpg")
+	
 
-	return 'clust.jpg'
+	return drawdendrogram(clust,article_name_list,jpeg="static/clust" + str(random.random()) + ".jpg")
 
 if __name__ == '__main__':
 	url_list = []

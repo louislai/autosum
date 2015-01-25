@@ -25,7 +25,7 @@ def cluster(request):
     url_list = [x.strip() for x in urls.split(';')]
     # jpeg = cluster_articles(url_list)
     jpeg = cluster_articles(url_list)
-    return HttpResponse("<img class='cluster_img' src='static/clust.jpg' width='1200px' height='800px' />")
+    return HttpResponse("<img class='cluster_img' src='" + jpeg + "' width='1200px' height='800px' />")
   return render(request, 'cluster.html')
 
 def summarize(request):
