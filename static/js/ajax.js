@@ -54,7 +54,7 @@ $(document).ready(function() {
       $('#compare_error_2').fadeOut();
     }
     if (test_url.test(article_url_1) && test_url.test(article_url_2)) {
-      $("#spinner").hide();
+      $("#spinner").fadeIn();
       $('#article_compare_result').hide();
       $.post('/compare', {article_url_1: article_url_1, article_url_2: article_url_2}, function(data) {
         $("#spinner").fadeOut();
@@ -93,13 +93,14 @@ $(document).ready(function() {
       valid = test_url.test(array[i].trim());
     }
     if (valid) {
-      $("#spinner").hide();
+      $("#spinner").fadeIn();
+      $('#imgcontainer').html('');
       $('#cluster_error').fadeOut();
       $('#article_cluster_result p').html('');
       $.post('/cluster', {article_urls: urls}, function(data) {
         $("#spinner").fadeOut();
         var result = data;
-        $('#article_cluster_result p').html(result);
+        $('#imgcontainer').html(result);
       })
     } else {
       $('#cluster_error').fadeIn();
