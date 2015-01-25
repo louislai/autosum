@@ -98,7 +98,6 @@ $(document).ready(function() {
       $('#cluster_error').fadeOut();
       $('#article_cluster_result p').html('');
       $.post('/cluster', {article_urls: urls}, function(data) {
-        alert(data);
         $("#spinner").fadeOut();
         var result = data;
         $('#imgcontainer').html(result);
